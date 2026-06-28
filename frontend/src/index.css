@@ -1,0 +1,342 @@
+@import "tailwindcss";
+
+/* ============================================
+   AI Workflow Builder — Design System
+   Dark-first, premium SaaS aesthetic
+   ============================================ */
+
+@theme {
+  /* ---- VS 2017 Dark Color Palette ---- */
+  --color-background: #1e1e1e;
+  --color-foreground: #d4d4d4;
+  
+  --color-card: #252526;
+  --color-card-foreground: #d4d4d4;
+  
+  --color-popover: #252526;
+  --color-popover-foreground: #d4d4d4;
+  
+  --color-primary: #007acc;
+  --color-primary-foreground: #ffffff;
+  
+  --color-secondary: #2d2d30;
+  --color-secondary-foreground: #d4d4d4;
+  
+  --color-muted: #3f3f46;
+  --color-muted-foreground: #858585;
+  
+  --color-accent: #3f3f46;
+  --color-accent-foreground: #d4d4d4;
+  
+  --color-destructive: #f48771;
+  --color-destructive-foreground: #ffffff;
+  
+  --color-border: #333337;
+  --color-input: #333337;
+  --color-ring: #007acc;
+
+  /* ---- Legacy custom variables mapped to new theme ---- */
+  --color-surface-primary: var(--color-background);
+  --color-surface-secondary: var(--color-card);
+  --color-surface-tertiary: var(--color-secondary);
+  --color-surface-elevated: #2d2d30;
+  --color-surface-hover: var(--color-accent);
+
+  --color-border-primary: var(--color-border);
+  --color-border-secondary: #3f3f46;
+  --color-border-focus: var(--color-ring);
+
+  --color-text-primary: var(--color-foreground);
+  --color-text-secondary: #9cdcfe; /* VS Variable light blue */
+  --color-text-tertiary: var(--color-muted-foreground);
+  --color-text-disabled: #656565;
+
+  --color-accent-violet: #c586c0; /* VS Control Flow Purple */
+  --color-accent-violet-hover: #d197c9;
+  --color-accent-cyan: #4ec9b0; /* VS Type Cyan */
+  --color-accent-amber: #dcdcaa; /* VS Function Yellow */
+  --color-accent-emerald: #b5cea8; /* VS String Green */
+  --color-accent-rose: #f48771; /* VS Error Red */
+  --color-accent-blue: #569cd6; /* VS Keyword Blue */
+
+  /* ---- Glass Effect ---- */
+  --color-glass-bg: rgba(37, 37, 38, 0.7);
+  --color-glass-border: rgba(255, 255, 255, 0.05);
+  --color-glass-highlight: rgba(255, 255, 255, 0.02);
+
+  /* ---- Typography ---- */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Consolas', 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ---- Radius ---- */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-full: 9999px;
+  --radius: 0.5rem; /* VS is relatively square, but we'll use a soft 0.5rem for modernization */
+
+  /* ---- Shadows ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow-violet: 0 0 15px rgba(197, 134, 192, 0.15);
+  --shadow-glow-cyan: 0 0 15px rgba(78, 201, 176, 0.15);
+
+  /* ---- Animations ---- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   Scrollbar
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ============================================
+   Selection
+   ============================================ */
+
+::selection {
+  background: rgba(139, 92, 246, 0.3);
+  color: var(--color-text-primary);
+}
+
+/* ============================================
+   Focus Ring (Accessibility)
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-violet);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.glass {
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--color-glass-border);
+}
+
+.glass-subtle {
+  background: rgba(18, 18, 26, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--color-glass-border);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(139, 92, 246, 0.2); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* ============================================
+   React Flow Overrides
+   ============================================ */
+
+.react-flow__background {
+  background-color: var(--color-surface-primary) !important;
+}
+
+.react-flow__minimap {
+  background: var(--color-surface-secondary) !important;
+  border: 1px solid var(--color-border-primary) !important;
+  border-radius: var(--radius-md) !important;
+  overflow: hidden;
+}
+
+.react-flow__minimap-mask {
+  fill: rgba(139, 92, 246, 0.08) !important;
+  stroke: rgba(139, 92, 246, 0.3) !important;
+  stroke-width: 1 !important;
+}
+
+.react-flow__controls {
+  background: var(--color-surface-elevated) !important;
+  border: 1px solid var(--color-border-primary) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-lg) !important;
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--color-border-primary) !important;
+  color: var(--color-text-secondary) !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 6px !important;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--color-surface-hover) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+}
+
+.react-flow__edge-path {
+  stroke: rgba(139, 92, 246, 0.4) !important;
+  stroke-width: 2 !important;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: rgba(139, 92, 246, 0.8) !important;
+}
+
+.react-flow__handle {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: var(--color-surface-elevated) !important;
+  border: 2px solid var(--color-accent-violet) !important;
+  transition: all var(--duration-fast) ease;
+}
+
+.react-flow__handle:hover {
+  background: var(--color-accent-violet) !important;
+  transform: scale(1.3);
+}
+
+.react-flow__connection-line {
+  stroke: rgba(139, 92, 246, 0.5) !important;
+  stroke-width: 2 !important;
+  stroke-dasharray: 5 5 !important;
+}
+
+.react-flow__attribution {
+  display: none !important;
+}
+@ i m p o r t   ' l o c o m o t i v e - s c r o l l / d i s t / l o c o m o t i v e - s c r o l l . c s s ' ;  
+ 
