@@ -128,7 +128,7 @@ CLAUDE.md
 
 Use functional React components.
 
-Use TypeScript everywhere.
+Use JavaScript everywhere.
 
 Keep components small.
 
@@ -466,3 +466,131 @@ Build software that feels like a commercial AI product, not a college assignment
 Every feature should be modular, documented, maintainable and visually polished.
 
 Prioritize long-term quality over short-term speed.
+
+## UI, Theme & Motion Standards
+
+### Design Philosophy
+
+* Every interface must feel premium, polished, modern, and highly interactive—not just functional.
+* Build experiences that feel like professionally designed desktop software rather than generic CRUD applications.
+* Every interaction should provide meaningful visual feedback.
+* Avoid static interfaces whenever motion or interaction can improve usability.
+
+---
+
+## Theme Guidelines
+
+### Default Theme
+
+Unless explicitly instructed otherwise, use a theme inspired by **Visual Studio 2017 Dark**.
+
+Guidelines:
+
+* Dark charcoal backgrounds
+* Blue accent colors similar to Visual Studio
+* High readability and proper contrast
+* Minimalistic, developer-focused appearance
+* Consistent spacing and typography
+* Soft borders instead of harsh outlines
+* Modern rounded corners (avoid excessive radius)
+* Clean shadows and layered depth where appropriate
+
+The interface should feel like a premium IDE rather than a typical website.
+
+---
+
+## Component Library
+
+Default UI stack:
+
+* **shadcn/ui** for components
+* Tailwind CSS for styling
+* Use Radix primitives where applicable
+* Avoid building basic UI components from scratch when robust community solutions already exist.
+
+---
+
+## Motion & Animation Policy
+
+Animations should feel intentional, smooth, and professional.
+
+Prefer using established animation libraries instead of custom implementations.
+
+Recommended libraries:
+
+* **GSAP** — timelines, stagger animations, scroll animations, advanced motion
+* **Framer Motion** — React component transitions and layout animations
+* **Anime.js** — reusable animation patterns and inspiration
+* **Locomotive Scroll** (or an equivalent maintained smooth-scroll library when appropriate) — smooth scrolling experiences
+* Native CSS transitions for simple hover and state changes
+
+Do not reinvent animation systems when proven solutions already exist.
+
+When implementing animations:
+
+* Reuse publicly available animation techniques and patterns whenever possible.
+* Use Anime.js examples as inspiration before inventing new motion.
+* Keep animations performant.
+* Motion should improve usability instead of becoming decoration.
+* Avoid distracting or overly flashy animations.
+
+---
+
+## Interactive Experience
+
+Every interactive element should feel responsive.
+
+Ensure:
+
+* Smooth hover states
+* Active states
+* Focus states
+* Button press animations
+* Card hover effects
+* Smooth page transitions
+* Animated drawers
+* Animated dialogs
+* Animated dropdowns
+* Smooth navigation
+* Skeleton loading animations
+* Success and error transitions
+* Scroll-triggered reveals where appropriate
+* Staggered list animations where appropriate
+
+Nothing should appear abruptly unless intentionally designed.
+
+---
+
+## Performance
+
+* Favor hardware-accelerated animations (`transform` and `opacity`) whenever possible.
+* Avoid layout thrashing.
+* Keep animations smooth even on lower-end devices.
+* Respect reduced-motion preferences when appropriate.
+
+---
+
+## Completion Checklist
+
+Before considering any UI task complete, verify:
+
+* The interface feels premium.
+* The theme consistently matches Visual Studio 2017 Dark.
+* Components use shadcn/ui whenever suitable.
+* Motion feels smooth and intentional.
+* Interactive elements provide visual feedback.
+* Loading states are polished.
+* Empty states are designed.
+* Error states are informative.
+* Animations are consistent throughout the application.
+* The interface feels alive without becoming distracting.
+
+---
+
+## Final Reminder
+
+Before finishing any UI implementation, always ask:
+
+> "Would this interface feel polished enough to be mistaken for a professionally designed desktop application?"
+
+If the answer is **no**, continue refining the UI, interactions, and motion until it does.
