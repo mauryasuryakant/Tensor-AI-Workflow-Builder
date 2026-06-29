@@ -46,7 +46,6 @@ Frontend
 - Tailwind CSS
 - React Flow
 - Framer Motion
-- shadcn/ui
 - Axios
 
 Backend
