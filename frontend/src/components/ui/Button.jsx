@@ -1,5 +1,4 @@
 import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
 import { cn } from "../../lib/utils"
 
 const buttonVariants = {
@@ -41,11 +40,10 @@ function getVariantClass(variant = "default", size = "default") {
 }
 
 const Button = React.forwardRef(
-  ({ className, variant, size, asChild = false, icon: Icon, iconRight: IconRight, loading, disabled, children, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+  ({ className, variant, size, icon: Icon, iconRight: IconRight, loading, disabled, children, ...props }, ref) => {
     const isDisabled = disabled || loading;
     return (
-      <Comp
+      <button
         className={cn(
           "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           getVariantClass(variant, size),
@@ -80,7 +78,7 @@ const Button = React.forwardRef(
         {IconRight && !loading && (
           <IconRight className={cn("h-4 w-4", children ? "ml-2" : "")} aria-hidden="true" />
         )}
-      </Comp>
+      </button>
     )
   }
 )

@@ -1,61 +1,8 @@
 import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { createPortal } from "react-dom"
+import { motion, AnimatePresence } from "framer-motion"
 import { X } from "lucide-react"
 import { cn } from "../../lib/utils"
-
-const Dialog = DialogPrimitive.Root
-const DialogTrigger = DialogPrimitive.Trigger
-const DialogPortal = DialogPrimitive.Portal
-
-const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    ref={ref}
-    className={cn(
-      "fixed inset-0 z-50 bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className
-    )}
-    {...props}
-  />
-))
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
-
-const DialogContent = React.forwardRef(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
-        className
-      )}
-      {...props}
-    >
-      {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
-  </DialogPortal>
-))
-DialogContent.displayName = DialogPrimitive.Content.displayName
-
-const DialogHeader = ({ className, ...props }) => (
-  <div
-    className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
-    {...props}
-  />
-)
-DialogHeader.displayName = "DialogHeader"
-
-const DialogTitle = React.forwardRef(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title
-    ref={ref}
-    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
-    {...props}
-  />
-))
-DialogTitle.displayName = DialogPrimitive.Title.displayName
 
 const sizeClasses = {
   sm: 'max-w-sm',
@@ -65,7 +12,10 @@ const sizeClasses = {
   full: 'max-w-[90vw]',
 };
 
-// Legacy API Wrapper for backwards compatibility
+/**
+ * Pure-React modal — no Radix Dialog dependency.
+ * Uses createPortal + Framer Motion for open/close animations.
+ */
 export default function Modal({
   isOpen,
   onClose,
@@ -74,18 +24,94 @@ export default function Modal({
   size = 'md',
   className = '',
 }) {
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn(sizeClasses[size], "p-0 overflow-hidden", className)}>
-        {title && (
-          <DialogHeader className="px-6 py-4 border-b border-border">
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
-        )}
-        <div className="px-6 py-4 max-h-[80vh] overflow-y-auto">
-          {children}
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
+  // Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Prevent body scroll while modal is open
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen, onClose]);
+
+  return createPortal(
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            key="modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+            onClick={onClose}
+            aria-hidden="true"
+          />
+
+          {/* Content */}
+          <motion.div
+            key="modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-label={title || "Dialog"}
+            initial={{ opacity: 0, scale: 0.95, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 8 }}
+            transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className={cn(
+              "fixed left-1/2 top-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2",
+              "border border-border bg-background rounded-lg shadow-lg overflow-hidden",
+              sizeClasses[size],
+              className
+            )}
+          >
+            {/* Header */}
+            {title && (
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                <h2 className="text-lg font-semibold leading-none tracking-tight text-foreground">
+                  {title}
+                </h2>
+                <button
+                  onClick={onClose}
+                  className="rounded-sm p-1 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
+            {/* Close button when no title */}
+            {!title && (
+              <button
+                onClick={onClose}
+                className="absolute right-4 top-4 rounded-sm p-1 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+
+            {/* Body */}
+            <div className="px-6 py-4 max-h-[80vh] overflow-y-auto">
+              {children}
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>,
+    document.body
+  );
 }

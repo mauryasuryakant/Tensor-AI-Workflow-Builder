@@ -228,8 +228,8 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
-  50% { box-shadow: 0 0 20px 4px rgba(139, 92, 246, 0.2); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 122, 204, 0); }
+  50% { box-shadow: 0 0 16px 3px rgba(0, 122, 204, 0.15); }
 }
 
 @keyframes float {
@@ -252,6 +252,25 @@ body {
 
 .animate-spin-slow {
   animation: spin-slow 8s linear infinite;
+}
+
+/* ============================================
+   Gradient Angle (PromptEditor animated border)
+   ============================================ */
+
+@property --gradient-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradient-rotate {
+  to { --gradient-angle: 360deg; }
+}
+
+.group:hover .bg-\[conic-gradient\(from_var\(--gradient-angle\)\,\#007acc\,\#4ec9b0\,\#c586c0\,\#007acc\)\],
+.group:focus-within .bg-\[conic-gradient\(from_var\(--gradient-angle\)\,\#007acc\,\#4ec9b0\,\#c586c0\,\#007acc\)\] {
+  animation: gradient-rotate 4s linear infinite;
 }
 
 /* ============================================
@@ -338,5 +357,3 @@ body {
 .react-flow__attribution {
   display: none !important;
 }
-@ i m p o r t   ' l o c o m o t i v e - s c r o l l / d i s t / l o c o m o t i v e - s c r o l l . c s s ' ;  
- 
